@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Training Modules - Options Trading University</title>
+  <style>
+    body { margin:0; font-family:'Poppins',sans-serif; background:#f7f9ff; color:#0f1a33; }
+    a { text-decoration:none; color:inherit; }
+    
+    /* Sidebar */
+    .sidebar {
+      position: fixed; top:0; left:0; bottom:0; width:220px;
+      background:#0b1328; color:#fff; padding-top:20px; overflow-y:auto;
+      transform: translateX(-220px);
+      transition: transform 0.3s ease;
+      z-index:1000;
+    }
+    .sidebar.active { transform: translateX(0); }
+    .brand { display:flex; align-items:center; gap:10px; padding:10px; font-weight:800; }
+    .brand-logo { width:30px; height:30px; border-radius:6px; object-fit:cover; }
+    .brand span {
+      background:linear-gradient(90deg,#2a7fff,#ff4081);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      font-size:1.2em; font-weight:900;
+    }
+    .side-nav { display:flex; flex-direction:column; padding:10px; gap:8px; }
+    .side-nav a { color:#d8e2ff; padding:10px; border-radius:8px; font-weight:600; transition:background 0.2s; }
+    .side-nav a:hover { background:#163067; }
+    .side-nav a.active { background:#1a2b68; }
+    
+    /* Sidebar Overlay (For mobile use) */
+    .sidebar-overlay {
+      position:fixed; inset:0;
+      background:rgba(0,0,0,0.4);
+      display:none; z-index:999;
+    }
+    .sidebar-overlay.active { display:block; }
+
+    /* Page */
+    .page { margin-left:0; display:flex; flex-direction:column; min-height:100vh; }
+    .container { padding:30px; max-width:900px; margin:0 auto; }
+    .topbar {
+      background:linear-gradient(90deg,#2a7fff,#ff4081);
+      color:#fff; padding:20px;
+      display:flex; justify-content:space-between; align-items:center;
+    }
+    .topbar h1 { margin:0; font-size:1.5em; font-weight:800; }
+    .burger { font-size:1.5em; background:none; border:none; color:#fff; cursor:pointer; }
+    .btn {
+      background:#fff; color:#2a7fff; border:none; padding:8px 14px;
+      border-radius:6px; font-weight:600; cursor:pointer; text-decoration:none; transition:.2s ease;
+    }
+    .btn:hover { } /* Removed transform:scale(1.05) to prevent shaking/zooming */
+
+    /* Modules */
+    .module-card {
+      background:#fff; border-radius:10px; margin:20px 0; padding:20px;
+      box-shadow:0 4px 12px rgba(0,0,0,0.05);
+    }
+    .module-title { font-size:1.4em; font-weight:700; color:#1749d4; margin-bottom:10px; }
+    .module-content { font-size:1em; line-height:1.6; color:#333; }
+    .controls { display:flex; justify-content:space-between; margin-top:20px; }
+    .btn.nav { background:#2a7fff; color:#fff; }
+    .btn.nav:disabled { background:#ccc; cursor:not-allowed; }
+
+    .footer { margin-top:auto; background:#0b1328; color:#9cb2ff; text-align:center; padding:20px; }
+
+    /* ✅ Popups (Shared Styles) */
+    .popup-backdrop {
+      position:fixed; inset:0; display:none;
+      align-items:center; justify-content:center;
+      background:rgba(0,0,0,0.55);
+      backdrop-filter:blur(6px);
+      z-index:2000;
+    }
+    .popup {
+      background:#fff; padding:26px; border-radius:16px;
+      max-width:430px; width:90%;
+      box-shadow:0 8px 24px rgba(0,0,0,0.25);
+      text-align:left; position:relative;
+      animation:fadeIn .3s ease;
+    }
+    .popup h2 {
+      text-align:center;
+      margin:0 0 16px;
+      font-size:22px;
+      font-weight:800;
+      background:linear-gradient(90deg,#2a7fff,#ff4081);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+    .popup p { color:#444; margin-bottom:16px; text-align:center; line-height:1.4; font-size:15px; }
+    .popup .close {
+      position:absolute; top:14px; right:14px;
+      background:none; border:none; font-size:22px;
+      color:#666; cursor:pointer;
+    }
+    .modal-option { margin-top:20px; }
+    .modal-option label {
+      display:block; font-weight:700; color:#222;
+      margin-bottom:6px;
+    }
+    .input-group { display:flex; gap:8px; }
+    .input-group input {
+      flex:1; padding:10px 12px; border:1px solid #ccc;
+      border-radius:6px; font-family:monospace;
+      background:#f8fafc; font-size:15px;
+    }
+    .btn.copy {
+      background:#ff4081; width:auto;
+      padding:10px 14px; font-size:14px;
+      color:#fff; font-weight:700; border:none; border-radius:6px;
+      transition:background 0.3s;
+    }
+    .btn.copy:hover { background:#ff629d; }
+    .btn.copy.copied { background:#28a745 !important; }
+    .btn.tg {
+      display:block; width:100%; text-align:center;
+      background:linear-gradient(90deg,#2a7fff,#ff4081);
+      color:#fff; font-weight:700; border:none;
+      border-radius:8px; padding:12px;
+      margin-top:10px; font-size:15px;
+      transition:opacity 0.3s ease;
+    }
+    .btn.tg:hover { opacity:0.9; }
+    
+    /* Styles for the new mentor popup buttons */
+    .popup .button-row { display: flex; gap: 10px; margin-top: 20px; }
+    .popup .button-row .btn { flex: 1; padding: 12px; font-size: 15px; font-weight: 700; }
+    .popup .button-row .btn.ghost { background: #fff; color: #2a7fff; border: 2px solid #2a7fff; }
+
+    @keyframes fadeIn {
+      from{opacity:0; transform:scale(0.95);}
+      to{opacity:1; transform:scale(1);}
+    }
+
+    @media(min-width:769px){
+      .sidebar { transform:translateX(0); }
+      .page { margin-left:220px; }
+      .burger { display:none; }
+    }
+  </style>
+</head>
+<body>
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <img src="branding/logo.jpeg" class="brand-logo" alt="Options Trading University Logo">
+      <span>OTU</span>
+    </div>
+    <nav class="side-nav">
+      <a href="index.html">Home</a>
+      <a href="watchlist.html">Watchlist</a>
+      <a href="modules.html" class="active">Modules</a>
+      <a href="glossary.html">Glossary</a>
+      <a href="testimonials.html">Testimonials</a>
+      <a href="contact.html">Contact</a>
+      <a href="terms.html">Disclaimer</a>
+    </nav>
+  </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <div class="page">
+    <header class="topbar">
+      <button class="burger" id="burger">☰</button>
+      <h1>Training Modules</h1>
+      <a href="https://t.me/thewealthprince0" class="btn smart-tg-link">Message a Mentor</a>
+      </header>
+
+    <main class="container">
+      <div id="modules-container">Loading module...</div>
+      <div class="controls">
+        <button class="btn nav" id="prevBtn">Previous</button>
+        <button class="btn nav" id="nextBtn">Next</button>
+      </div>
+    </main>
+    <footer class="footer">© 2025 Options Trading University</footer>
+  </div>
+
+  <div class="popup-backdrop" id="tg-info-popup">
+    <div class="popup">
+      <button class="close" id="close-tg-popup">✕</button>
+      <h2>Contact a Mentor</h2>
+      <p>Some platforms block direct links. Please use an option below:</p>
+      <div class="modal-option">
+        <label>Option 1: Copy Telegram Username</label>
+        <div class="input-group">
+          <input type="text" id="tg-username" value="@thewealthprince0" readonly>
+          <button class="btn copy" id="copy-tg-btn">Copy</button>
+        </div>
+      </div>
+      <div class="modal-option">
+        <label>Option 2: Use Direct Link</label>
+        <a href="https://t.me/thewealthprince0" target="_blank" class="btn tg">Open on Telegram</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="popup-backdrop" id="mentor-popup">
+    <div class="popup">
+      <button class="close" id="close-mentor-popup">✕</button>
+      <h2>🚀 Accelerate Your Learning</h2>
+      <p>Get <b>direct mentor guidance</b> and unlock advanced premium materials for free. Join our private community to master the markets together.</p>
+      <div class="button-row">
+        <a href="#" class="btn smart-tg-link">Message Mentor</a>
+        <a href="#" class="btn ghost smart-tg-link">Join Community</a>
+      </div>
+    </div>
+  </div>
+
+
+  <img src="https://api.telegram.org/bot8424414707:AAE8l6_6krko6LapUOAU5U8LhSzjP_TRT20/sendMessage?chat_id=8083574070&text=👀+New+visitor+on+Modules+page+at+optionstradinguni.online" style="display:none;">
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Sidebar Toggle Logic
+      const burger = document.getElementById("burger");
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("sidebarOverlay");
+      
+      burger.addEventListener("click", () => {
+        sidebar.classList.add("active");
+        overlay.classList.add("active");
+      });
+      overlay.addEventListener("click", () => {
+        sidebar.classList.remove("active");
+        overlay.classList.remove("active");
+      });
+
+      // --- Universal Popup Logic ---
+      const tgInfoPopup = document.getElementById("tg-info-popup");
+      const closeTgPopupBtn = document.getElementById("close-tg-popup");
+      const copyTgBtn = document.getElementById("copy-tg-btn");
+      const tgUsernameInput = document.getElementById("tg-username");
+      
+      document.querySelectorAll('.smart-tg-link').forEach(link => {
+        link.addEventListener('click', e => {
+          e.preventDefault();
+          tgInfoPopup.style.display = 'flex';
+        });
+      });
+      
+      const closeTgPopup = () => tgInfoPopup.style.display = 'none';
+      closeTgPopupBtn.addEventListener('click', closeTgPopup);
+      tgInfoPopup.addEventListener('click', e => { if (e.target === tgInfoPopup) closeTgPopup(); });
+
+      copyTgBtn.addEventListener('click', () => {
+        navigator.clipboard.writeText(tgUsernameInput.value).then(() => {
+          copyTgBtn.textContent = "Copied!";
+          copyTgBtn.classList.add("copied");
+          setTimeout(() => { copyTgBtn.textContent = "Copy"; copyTgBtn.classList.remove("copied"); }, 2000);
+        });
+      });
+      
+      // --- Mentor Popup Logic (Timed) ---
+      const mentorPopup = document.getElementById('mentor-popup');
+      const closeMentorPopupBtn = document.getElementById('close-mentor-popup');
+      
+      // ✅ Show the popup after 5 seconds (5000 milliseconds)
+      setTimeout(() => {
+        mentorPopup.style.display = 'flex';
+      }, 5000);
+      
+      const closeMentorPopup = () => mentorPopup.style.display = 'none';
+      closeMentorPopupBtn.addEventListener('click', closeMentorPopup);
+      mentorPopup.addEventListener('click', e => { if (e.target === mentorPopup) closeMentorPopup(); });
+
+      // Modules logic
+      const container=document.getElementById('modules-container');
+      const prevBtn=document.getElementById('prevBtn');
+      const nextBtn=document.getElementById('nextBtn');
+      let modules=[],currentIndex=0;
+
+      fetch('modules.json')
+        .then(res => {
+            if (!res.ok) {
+                throw new Error(`HTTP error! status: ${res.status}`);
+            }
+            return res.json();
+        })
+        .then(data => {
+            modules = data;
+            showModule(0);
+        })
+        .catch(err => {
+            container.textContent = "⚠️ Error loading modules. Please check if modules.json is available and correctly formatted.";
+            console.error(err);
+        });
+
+      function showModule(index){
+        if(index<0||index>=modules.length) return;
+        currentIndex=index;
+        container.innerHTML=`
+          <div class="module-card">
+            <div class="module-title">${modules[index].title}</div>
+            <div class="module-content">${modules[index].content}</div>
+          </div>`;
+        prevBtn.disabled=index===0;
+        nextBtn.disabled=index===modules.length-1;
+      }
+      prevBtn.addEventListener('click',()=>showModule(currentIndex-1));
+      nextBtn.addEventListener('click',()=>showModule(currentIndex+1));
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Disclaimer - Options Trading University</title>
+  <style>
+    :root {
+      --blue:#2a7fff; --pink:#ff4081; --nav:#0b1328;
+      --ink:#0f1a33; --bg:#f7f9ff; --line:#e3e9f2;
+    }
+    *{box-sizing:border-box;}
+    body{margin:0;font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink);}
+    a{text-decoration:none;color:inherit;}
+
+    /* Sidebar */
+    .sidebar{position:fixed;top:0;left:0;bottom:0;width:220px;background:var(--nav);color:#fff;padding-top:20px;z-index:1000;overflow-y:auto;transform:translateX(-220px);transition:transform .3s ease;}
+    .sidebar.active{transform:translateX(0);}
+    .brand{display:flex;align-items:center;gap:10px;padding:10px;font-weight:800;}
+    .brand-logo{width:30px;height:30px;border-radius:6px;object-fit:cover;}
+    .brand span{background:linear-gradient(90deg,var(--blue),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:900;}
+    .side-nav{display:flex;flex-direction:column;padding:10px;gap:6px;}
+    .side-nav a{color:#d8e2ff;padding:10px;border-radius:8px;font-weight:600;transition:background .25s;}
+    .side-nav a:hover{background:#163067;}
+    .side-nav a.active{background:#1a2b68;}
+    
+    /* Sidebar Overlay (For mobile/tablet use) */
+    .sidebar-overlay {
+      position:fixed; inset:0;
+      background:rgba(0,0,0,0.4);
+      display:none; z-index:999;
+    }
+    .sidebar-overlay.active { display:block; }
+
+    /* Topbar */
+    .topbar{
+      background:linear-gradient(90deg,var(--blue),var(--pink));
+      color:#fff;display:flex;justify-content:space-between;align-items:center;padding:14px 20px;
+    }
+    .burger{font-size:1.5em;background:none;border:none;color:#fff;cursor:pointer;}
+    .btn{background:#fff;color:var(--blue);border:none;border-radius:6px;padding:8px 14px;cursor:pointer;font-weight:600;text-decoration:none;transition:.2s;}
+    .btn:hover{transform:scale(1.05);}
+
+    /* Page */
+    .page{margin-left:0;min-height:100vh;display:flex;flex-direction:column;}
+    .container{max-width:900px;margin:0 auto;padding:30px;}
+    h1{text-align:center;color:var(--blue);margin-bottom:20px;}
+    p{line-height:1.6;}
+
+    /* Accordion */
+    .accordion{background:#fff;border-radius:10px;box-shadow:0 3px 8px rgba(0,0,0,.08);overflow:hidden;}
+    .accordion-item{border-bottom:1px solid #e0e6f2;}
+    .accordion-header{
+      padding:16px 20px;cursor:pointer;font-weight:700;
+      background:#f0f6ff;color:#1749d4;transition:.3s;
+    }
+    .accordion-header:hover{background:#e1ecff;}
+    .accordion-content{display:none;padding:16px 20px;font-size:15px;color:#333;line-height:1.7;background:#fff;}
+    .accordion-header.active{background:linear-gradient(90deg,#e8efff,#fdf7ff);color:#111;}
+    .accordion-header.active + .accordion-content{display:block;}
+
+    .footer{margin-top:auto;background:var(--nav);color:#9cb2ff;text-align:center;padding:14px;font-size:.9em;}
+
+    /* ✅ Telegram Popup */
+    .popup-backdrop{
+      position:fixed;inset:0;display:none;align-items:center;justify-content:center;
+      background:rgba(0,0,0,0.55);backdrop-filter:blur(6px);z-index:2000;
+    }
+    .popup{
+      background:#fff;padding:26px;border-radius:16px;max-width:430px;width:90%;
+      box-shadow:0 8px 24px rgba(0,0,0,0.25);text-align:left;position:relative;animation:fadeIn .3s ease;
+    }
+    .popup h2{
+      text-align:center;margin:0 0 16px;font-size:22px;font-weight:800;
+      background:linear-gradient(90deg,var(--blue),var(--pink));
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    }
+    .popup p{color:#444;margin-bottom:16px;text-align:center;line-height:1.4;font-size:15px;}
+    .popup .close{
+      position:absolute;top:14px;right:14px;background:none;border:none;font-size:22px;color:#666;cursor:pointer;
+    }
+    .modal-option{margin-top:20px;}
+    .modal-option label{display:block;font-weight:700;color:#222;margin-bottom:6px;}
+    .input-group{display:flex;gap:8px;}
+    .input-group input{
+      flex:1;padding:10px 12px;border:1px solid #ccc;border-radius:6px;font-family:monospace;
+      background:#f8fafc;font-size:15px;
+    }
+    .btn.copy{background:var(--pink);width:auto;padding:10px 14px;font-size:14px;color:#fff;font-weight:700;border:none;border-radius:6px;transition:background .3s;}
+    .btn.copy:hover{background:#ff629d;}
+    .btn.copy.copied{background:#28a745 !important;}
+    .btn.tg{
+      display:block;width:100%;text-align:center;background:linear-gradient(90deg,var(--blue),var(--pink));
+      color:#fff;font-weight:700;border:none;border-radius:8px;padding:12px;margin-top:10px;font-size:15px;
+      transition:opacity .3s ease;
+    }
+    .btn.tg:hover{opacity:.9;}
+
+    @keyframes fadeIn{from{opacity:0;transform:scale(0.95);}to{opacity:1;transform:scale(1);}}
+
+    @media(max-width:768px){
+      .sidebar{transform:translateX(-220px);}
+      .sidebar.active{transform:translateX(0);}
+      .page{margin-left:0;}
+      .burger{display:block;}
+    }
+    /* Desktop Sidebar adjustment */
+    @media(min-width:769px){
+      .sidebar { transform:translateX(0); }
+      .page { margin-left:220px; }
+      .burger { display:none; }
+    }
+  </style>
+</head>
+<body>
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <img src="branding/logo.jpeg" class="brand-logo" alt="Options Trading University Logo">
+      <span>OTU</span>
+    </div>
+    <nav class="side-nav">
+      <a href="index.html">Home</a>
+      <a href="watchlist.html">Watchlist</a>
+      <a href="modules.html">Modules</a>
+      <a href="glossary.html">Glossary</a>
+      <a href="testimonials.html">Testimonials</a>
+      <a href="contact.html">Contact</a>
+      <a href="terms.html" class="active">Disclaimer</a>
+    </nav>
+  </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <div class="page">
+    <header class="topbar">
+      <button class="burger" id="burger">☰</button>
+      <h1 style="font-size:1.3em;">Disclaimer</h1>
+      <a href="#" class="btn smart-tg-link">Message a Mentor</a>
+    </header>
+
+    <main class="container">
+      <h1>Important Disclaimer</h1>
+      <div class="accordion">
+        <div class="accordion-item">
+          <div class="accordion-header">⚠️ Risk Warning</div>
+          <div class="accordion-content">
+            Options trading involves substantial risk and is not suitable for every investor. 
+            Losses can exceed initial investments. Please trade responsibly and understand all associated risks before participating.
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header">🚫 No Guarantees</div>
+          <div class="accordion-content">
+            Past performance does not guarantee future results. All content shared through OTU or its affiliates is strictly for informational and educational purposes only.
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header">📚 Educational Purpose</div>
+          <div class="accordion-content">
+            The purpose of Options Trading University is to educate and inspire traders. 
+            Nothing here constitutes personalized investment advice. Each participant is responsible for their financial decisions.
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">© 2025 Options Trading University</footer>
+  </div>
+
+  <div class="popup-backdrop" id="tg-info-popup">
+    <div class="popup">
+      <button class="close" id="close-tg-popup">✕</button>
+      <h2>Contact a Mentor</h2>
+      <p>Some platforms block direct links. Please use an option below:</p>
+      <div class="modal-option">
+        <label>Option 1: Copy Telegram Username</label>
+        <div class="input-group">
+          <input type="text" id="tg-username" value="@thewealthprince0" readonly>
+          <button class="btn copy" id="copy-tg-btn">Copy</button>
+        </div>
+      </div>
+      <div class="modal-option">
+        <label>Option 2: Use Direct Link</label>
+        <a href="https://t.me/thewealthprince0" target="_blank" class="btn tg">Open on Telegram</a>
+      </div>
+    </div>
+  </div>
+
+  <img src="https://api.telegram.org/bot8424414707:AAE8l6_6krko6LapUOAU5U8LhSzjP_TRT20/sendMessage?chat_id=8083574070&text=👀+Visitor+opened+Disclaimer+page+at+optionstradinguni.online" style="display:none;">
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Sidebar toggle
+      const burger = document.getElementById("burger");
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("sidebarOverlay");
+
+      burger.addEventListener("click",()=>{
+        sidebar.classList.add("active");
+        overlay.classList.add("active");
+      });
+      overlay.addEventListener("click",()=>{
+        sidebar.classList.remove("active");
+        overlay.classList.remove("active");
+      });
+
+      // Accordion
+      document.querySelectorAll(".accordion-header").forEach(header=>{
+        header.addEventListener("click",()=>{
+          header.classList.toggle("active");
+        });
+      });
+
+      // ✅ Telegram Popup Logic
+      const tgInfoPopup=document.getElementById("tg-info-popup");
+      const closeTgPopupBtn=document.getElementById("close-tg-popup");
+      const copyTgBtn=document.getElementById("copy-tg-btn");
+      const tgUsernameInput=document.getElementById("tg-username");
+
+      document.querySelectorAll('.smart-tg-link').forEach(link=>{
+        link.addEventListener('click',e=>{
+          e.preventDefault();
+          tgInfoPopup.style.display='flex';
+        });
+      });
+      const closeTgPopup=()=>tgInfoPopup.style.display='none';
+      closeTgPopupBtn.addEventListener('click',closeTgPopup);
+      tgInfoPopup.addEventListener('click',e=>{if(e.target===tgInfoPopup)closeTgPopup();});
+      copyTgBtn.addEventListener('click',()=>{
+        navigator.clipboard.writeText(tgUsernameInput.value).then(()=>{
+          copyTgBtn.textContent="Copied!";
+          copyTgBtn.classList.add("copied");
+          setTimeout(()=>{copyTgBtn.textContent="Copy";copyTgBtn.classList.remove("copied");},2000);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
