@@ -5,11 +5,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
+import { TelegramContactModal } from "@/components/telegram-contact-modal";
 import type { Testimonial } from "@shared/schema";
 
 export default function Testimonials() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [showTelegramModal, setShowTelegramModal] = useState(false);
   const carouselRef = useRef<HTMLDivElement>(null);
+  
+  const telegramUsername = "@thewealthprince0";
+  const telegramUrl = "https://t.me/thewealthprince0";
   const { data: allTestimonials, isLoading } = useQuery<Testimonial[]>({
     queryKey: ["/api/testimonials"],
   });
@@ -222,16 +227,21 @@ export default function Testimonials() {
                 size="lg"
                 className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 transition-opacity"
                 data-testid="button-join-now"
-                asChild
+                onClick={() => setShowTelegramModal(true)}
               >
-                <a href="https://t.me/thewealthprince0" target="_blank" rel="noopener noreferrer">
-                  Message a Mentor
-                </a>
+                Message a Mentor
               </Button>
             </CardContent>
           </Card>
         </div>
       </div>
+
+      <TelegramContactModal
+        open={showTelegramModal}
+        onOpenChange={setShowTelegramModal}
+        telegramUsername={telegramUsername}
+        telegramUrl={telegramUrl}
+      />
     </div>
   );
 }

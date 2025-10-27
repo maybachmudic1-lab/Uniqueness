@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Mail, MessageCircle, Send } from "lucide-react";
@@ -7,8 +8,14 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { TelegramContactModal } from "@/components/telegram-contact-modal";
 
 export default function Contact() {
+  const [showTelegramModal, setShowTelegramModal] = useState(false);
+  
+  const telegramUsername = "@thewealthprince0";
+  const telegramUrl = "https://t.me/thewealthprince0";
+
   return (
     <div className="min-h-screen py-12 px-6">
       <div className="max-w-4xl mx-auto space-y-12">
@@ -63,12 +70,10 @@ export default function Contact() {
               <Button
                 className="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90 transition-opacity"
                 data-testid="button-telegram"
-                asChild
+                onClick={() => setShowTelegramModal(true)}
               >
-                <a href="https://t.me/thewealthprince0" target="_blank" rel="noopener noreferrer">
-                  Open Telegram
-                  <Send className="ml-2 w-4 h-4" />
-                </a>
+                Open Telegram
+                <Send className="ml-2 w-4 h-4" />
               </Button>
             </CardContent>
           </Card>
@@ -158,16 +163,21 @@ export default function Contact() {
               size="lg"
               className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 transition-opacity"
               data-testid="button-join-community"
-              asChild
+              onClick={() => setShowTelegramModal(true)}
             >
-              <a href="https://t.me/thewealthprince0" target="_blank" rel="noopener noreferrer">
-                Message a Mentor
-                <Send className="ml-2 w-4 h-4" />
-              </a>
+              Message a Mentor
+              <Send className="ml-2 w-4 h-4" />
             </Button>
           </CardContent>
         </Card>
       </div>
+
+      <TelegramContactModal
+        open={showTelegramModal}
+        onOpenChange={setShowTelegramModal}
+        telegramUsername={telegramUsername}
+        telegramUrl={telegramUrl}
+      />
     </div>
   );
 }
