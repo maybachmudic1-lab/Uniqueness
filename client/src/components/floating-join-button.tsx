@@ -4,19 +4,7 @@ import { MessageCircle } from "lucide-react";
 import { TelegramContactModal } from "@/components/telegram-contact-modal";
 
 export function FloatingJoinButton() {
-  const [isVisible, setIsVisible] = useState(false);
   const [showTelegramModal, setShowTelegramModal] = useState(false);
-
-  useEffect(() => {
-    const delay = 20000;
-    const timer = setTimeout(() => {
-      setIsVisible(true);
-    }, delay);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (!isVisible) return null;
 
   const handleClick = () => {
     setShowTelegramModal(true);
