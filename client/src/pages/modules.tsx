@@ -4,11 +4,16 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ChevronLeft, ChevronRight, BookOpen, CheckCircle2 } from "lucide-react";
+import { TelegramContactModal } from "@/components/telegram-contact-modal";
 import type { Module } from "@shared/schema";
 
 export default function Modules() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [completedModules, setCompletedModules] = useState<Set<number>>(new Set());
+  const [showTelegramModal, setShowTelegramModal] = useState(false);
+  
+  const telegramUsername = "@thewealthprince0";
+  const telegramUrl = "https://t.me/thewealthprince0";
   const { data: modules, isLoading } = useQuery<Module[]>({
     queryKey: ["/api/modules"],
   });
@@ -222,6 +227,13 @@ export default function Modules() {
           </CardContent>
         </Card>
       </div>
+
+      <TelegramContactModal
+        open={showTelegramModal}
+        onOpenChange={setShowTelegramModal}
+        telegramUsername={telegramUsername}
+        telegramUrl={telegramUrl}
+      />
     </div>
   );
 }

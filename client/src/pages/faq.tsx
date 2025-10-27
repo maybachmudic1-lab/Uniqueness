@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Accordion,
@@ -7,8 +8,14 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { MessageCircle } from "lucide-react";
+import { TelegramContactModal } from "@/components/telegram-contact-modal";
 
 export default function FAQ() {
+  const [showTelegramModal, setShowTelegramModal] = useState(false);
+  
+  const telegramUsername = "@thewealthprince0";
+  const telegramUrl = "https://t.me/thewealthprince0";
+  
   const faqs = [
     {
       category: "Getting Started",
@@ -209,17 +216,22 @@ export default function FAQ() {
             <Button
               size="lg"
               className="bg-gradient-to-r from-primary to-secondary"
-              asChild
+              onClick={() => setShowTelegramModal(true)}
               data-testid="button-message-mentor"
             >
-              <a href="https://t.me/thewealthprince0" target="_blank" rel="noopener noreferrer">
-                <MessageCircle className="w-5 h-5 mr-2" />
-                Message a Mentor on Telegram
-              </a>
+              <MessageCircle className="w-5 h-5 mr-2" />
+              Message a Mentor on Telegram
             </Button>
           </CardContent>
         </Card>
       </div>
+
+      <TelegramContactModal
+        open={showTelegramModal}
+        onOpenChange={setShowTelegramModal}
+        telegramUsername={telegramUsername}
+        telegramUrl={telegramUrl}
+      />
     </div>
   );
 }

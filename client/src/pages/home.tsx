@@ -83,7 +83,6 @@ function StatCard({ value, label, icon: Icon, prefix = "", suffix = "", testId }
 
 export default function Home() {
   const [showTelegramModal, setShowTelegramModal] = useState(false);
-  const [offerTimeLeft, setOfferTimeLeft] = useState(18000);
 
   const { data: stats } = useQuery<Stats>({
     queryKey: ["/api/stats"],
@@ -92,25 +91,6 @@ export default function Home() {
   const { data: testimonials } = useQuery<Testimonial[]>({
     queryKey: ["/api/testimonials"],
   });
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setOfferTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
-
-
-  const formatOfferTime = (seconds: number) => {
-    const hours = Math.floor(seconds / 3600);
-    const mins = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
-    if (hours > 0) {
-      return `${hours}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    }
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
 
   const handleContactClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -151,7 +131,7 @@ export default function Home() {
                 data-testid="button-become-member"
                 onClick={handleContactClick}
               >
-                Get 50% OFF - Ends in {formatOfferTime(offerTimeLeft)}!
+                Get Started
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </div>
