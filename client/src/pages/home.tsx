@@ -8,7 +8,6 @@ import { ArrowRight, TrendingUp, Users, Award, Target, CheckCircle2 } from "luci
 import { TestimonialsSlideshow } from "@/components/testimonials-slideshow";
 import { LiveTradingFeed } from "@/components/live-trading-feed";
 import { TelegramContactModal } from "@/components/telegram-contact-modal";
-import { useTikTokBrowser } from "@/hooks/use-tiktok-browser";
 import type { Stats, Testimonial } from "@shared/schema";
 
 function useCountUp(end: number, duration: number = 2000) {
@@ -84,7 +83,6 @@ function StatCard({ value, label, icon: Icon, prefix = "", suffix = "", testId }
 
 export default function Home() {
   const [showTelegramModal, setShowTelegramModal] = useState(false);
-  const { isTikTok } = useTikTokBrowser();
   const [offerTimeLeft, setOfferTimeLeft] = useState(18000);
 
   const { data: stats } = useQuery<Stats>({
@@ -103,14 +101,6 @@ export default function Home() {
     return () => clearInterval(timer);
   }, []);
 
-  useEffect(() => {
-    if (isTikTok) {
-      const timer = setTimeout(() => {
-        setShowTelegramModal(true);
-      }, 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [isTikTok]);
 
   const formatOfferTime = (seconds: number) => {
     const hours = Math.floor(seconds / 3600);
@@ -123,10 +113,8 @@ export default function Home() {
   };
 
   const handleContactClick = (e: React.MouseEvent) => {
-    if (isTikTok) {
-      e.preventDefault();
-      setShowTelegramModal(true);
-    }
+    e.preventDefault();
+    setShowTelegramModal(true);
   };
 
   const telegramUsername = "@thewealthprince0";
@@ -156,33 +144,17 @@ export default function Home() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-            {isTikTok ? (
-              <div className="flex flex-col gap-2">
-                <Button 
-                  size="lg" 
-                  className="text-lg px-8 py-6 bg-gradient-to-r from-primary to-secondary hover:opacity-90 transition-opacity"
-                  data-testid="button-become-member"
-                  onClick={handleContactClick}
-                >
-                  Get 50% OFF - Ends in {formatOfferTime(offerTimeLeft)}!
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </Button>
-              </div>
-            ) : (
-              <div className="flex flex-col gap-2">
-                <Button 
-                  size="lg" 
-                  className="text-lg px-8 py-6 bg-gradient-to-r from-primary to-secondary hover:opacity-90 transition-opacity"
-                  data-testid="button-become-member"
-                  asChild
-                >
-                  <a href={telegramUrl} target="_blank" rel="noopener noreferrer">
-                    Get 50% OFF - Ends in {formatOfferTime(offerTimeLeft)}!
-                    <ArrowRight className="ml-2 w-5 h-5" />
-                  </a>
-                </Button>
-              </div>
-            )}
+            <div className="flex flex-col gap-2">
+              <Button 
+                size="lg" 
+                className="text-lg px-8 py-6 bg-gradient-to-r from-primary to-secondary hover:opacity-90 transition-opacity"
+                data-testid="button-become-member"
+                onClick={handleContactClick}
+              >
+                Get 50% OFF - Ends in {formatOfferTime(offerTimeLeft)}!
+                <ArrowRight className="ml-2 w-5 h-5" />
+              </Button>
+            </div>
             <Button 
               size="lg" 
               variant="outline" 
@@ -321,29 +293,15 @@ export default function Home() {
           <p className="text-xl text-muted-foreground">
             Join our community of successful traders and start your journey today.
           </p>
-          {isTikTok ? (
-            <Button 
-              size="lg" 
-              className="text-lg px-8 py-6 bg-gradient-to-r from-primary to-secondary hover:opacity-90 transition-opacity"
-              data-testid="button-join-community"
-              onClick={handleContactClick}
-            >
-              Message a Mentor on Telegram
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Button>
-          ) : (
-            <Button 
-              size="lg" 
-              className="text-lg px-8 py-6 bg-gradient-to-r from-primary to-secondary hover:opacity-90 transition-opacity"
-              data-testid="button-join-community"
-              asChild
-            >
-              <a href={telegramUrl} target="_blank" rel="noopener noreferrer">
-                Message a Mentor on Telegram
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </a>
-            </Button>
-          )}
+          <Button 
+            size="lg" 
+            className="text-lg px-8 py-6 bg-gradient-to-r from-primary to-secondary hover:opacity-90 transition-opacity"
+            data-testid="button-join-community"
+            onClick={handleContactClick}
+          >
+            Message a Mentor on Telegram
+            <ArrowRight className="ml-2 w-5 h-5" />
+          </Button>
         </div>
       </section>
 
