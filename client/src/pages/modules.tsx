@@ -219,9 +219,10 @@ export default function Modules() {
               size="lg"
               className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 transition-opacity"
               data-testid="button-message-mentor"
-              onClick={() => setShowTelegramModal(true)}
+              onClick={handleContactClick}
             >
-              Message a Mentor
+                Message a Mentor
+              <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
           </CardContent>
         </Card>

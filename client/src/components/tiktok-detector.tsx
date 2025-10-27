@@ -20,7 +20,7 @@ export function TikTokDetector() {
     const isTikTok = userAgent.includes("TikTok") || userAgent.includes("musical_ly");
     
     if (isTikTok) {
-      setTimeout(() => setShowTikTokModal(true), 2000);
+      setTimeout(() => setShowTikTokModal(true), 13000);
     }
   }, []);
 
