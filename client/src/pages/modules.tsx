@@ -214,11 +214,10 @@ export default function Modules() {
               size="lg"
               className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 transition-opacity"
               data-testid="button-message-mentor"
-              asChild
+              onClick={handleContactClick}
             >
-              <a href="https://t.me/thewealthprince0" target="_blank" rel="noopener noreferrer">
                 Message a Mentor
-              </a>
+              <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
           </CardContent>
         </Card>
