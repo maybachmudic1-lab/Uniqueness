@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Switch, Route } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -13,6 +14,7 @@ import { JoinPopup } from "@/components/join-popup";
 import { FloatingJoinButton } from "@/components/floating-join-button";
 import { LiveNotifications } from "@/components/live-notifications";
 import { ExitIntentPopup } from "@/components/exit-intent-popup";
+import { TelegramContactModal } from "@/components/telegram-contact-modal";
 
 import Home from "@/pages/home";
 import Testimonials from "@/pages/testimonials";
@@ -49,10 +51,19 @@ function Router() {
 }
 
 function App() {
+  const [showTelegramModal, setShowTelegramModal] = useState(false);
+  
   const style = {
     "--sidebar-width": "16rem",
     "--sidebar-width-icon": "3rem",
   };
+
+  const handleMessageMentorClick = () => {
+    setShowTelegramModal(true);
+  };
+
+  const telegramUsername = "@thewealthprince0";
+  const telegramUrl = "https://t.me/thewealthprince0";
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -70,11 +81,9 @@ function App() {
                       variant="default"
                       className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 transition-opacity hidden sm:flex"
                       data-testid="button-message-mentor"
-                      asChild
+                      onClick={handleMessageMentorClick}
                     >
-                      <a href="https://t.me/thewealthprince0" target="_blank" rel="noopener noreferrer">
-                        Message a Mentor
-                      </a>
+                      Message a Mentor
                     </Button>
                   </div>
                 </header>
@@ -91,6 +100,12 @@ function App() {
             <FloatingJoinButton />
             <LiveNotifications />
             <ExitIntentPopup />
+            <TelegramContactModal
+              open={showTelegramModal}
+              onOpenChange={setShowTelegramModal}
+              telegramUsername={telegramUsername}
+              telegramUrl={telegramUrl}
+            />
           </SidebarProvider>
           <Toaster />
         </TooltipProvider>
